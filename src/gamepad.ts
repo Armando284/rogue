@@ -28,8 +28,11 @@ export class PadPoll {
 	private prev = new Uint8Array(32)
 	private dir = ''
 	private repeatAt = 0
+	private emit: (token: string) => void
 
-	constructor(private readonly emit: (token: string) => void) {}
+	constructor(emit: (token: string) => void) {
+		this.emit = emit
+	}
 
 	poll(now: number): void {
 		const pads = (typeof navigator !== 'undefined' && navigator.getGamepads) ? navigator.getGamepads() : []
