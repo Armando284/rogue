@@ -1,13 +1,55 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>rogue</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+		/>
+		<meta name="color-scheme" content="dark" />
+		<meta name="theme-color" content="#050300" />
+		<title>ROGUE.EXE — amber CRT dungeon crawler</title>
+		<meta
+			name="description"
+			content="ROGUE.EXE: a retro amber-terminal roguelike. Bump combat against goblins and skeletons, hoard gold, quaff potions, find the stairs '>' and descend — permadeath, deterministic daily dungeon."
+		/>
+	</head>
+	<body>
+		<main class="terminal" aria-label="ROGUE.EXE game">
+			<header class="crt-bar">
+				<h1>ROGUE.EXE</h1>
+				<p class="tagline">THE DUNGEON RUNS DEEP &mdash; TODAY&rsquo;S SEED IS DAILY</p>
+				<div id="hud-bar">
+					<span id="hud-depth">D1</span>
+					<span id="hud-hp">HP --/--</span>
+					<span id="hud-lvl">LVL 1</span>
+					<span id="hud-xp">XP 0</span>
+					<span id="hud-gold">GOLD 0</span>
+				</div>
+			</header>
+
+			<canvas id="game" width="1024" height="704"></canvas>
+
+			<ul class="legend" aria-label="Legend">
+				<li><b class="glyph amber-pure">@</b> you</li>
+				<li><b class="glyph amber">#</b> wall</li>
+				<li><b class="glyph amber-dim">.</b> floor</li>
+				<li><b class="glyph amber-pure">></b> stairs &mdash; stand on them to descend</li>
+				<li><b class="glyph amber">$</b> gold</li>
+				<li><b class="glyph amber">!</b> potion</li>
+				<li><b class="glyph amber-pure">g</b> goblin</li>
+				<li><b class="glyph amber-pure">K</b> skeleton</li>
+			</ul>
+
+			<div id="log" aria-live="polite" aria-label="Game log"></div>
+
+			<div id="touch-controls" aria-label="Touch controls">
+				<button class="dpad k-up" data-key="w" aria-label="Up">▲</button>
+				<button class="dpad k-left" data-key="a" aria-label="Left">◀</button>
+				<button class="dpad k-down" data-key="s" aria-label="Down">▼</button>
+				<button class="dpad k-right" data-key="d" aria-label="Right">▶</button>
+			</div>
+		</main>
+		<script type="module" src="/src/main.ts"></script>
+	</body>
 </html>

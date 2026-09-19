@@ -294,3 +294,60 @@ code {
     border-right-color: var(--border);
   }
 }
+
+
+/* ── ROGUE.EXE dark CRT override ─────────────────────────────── */
+:root {
+	--crt-bg: #050300;
+	--crt-text: #f4b860;
+	--crt-dim: #8a6420;
+	--crt-border: #2a2010;
+	color-scheme: dark;
+	background: var(--crt-bg);
+	color: var(--crt-text);
+}
+
+body {
+	margin: 0;
+	background: var(--crt-bg) !important;
+	color: var(--crt-text) !important;
+}
+
+#hud-bar {
+	color: var(--crt-text);
+	background: #0a0703;
+	border-bottom: 1px solid var(--crt-border);
+}
+
+.legend {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px 22px;
+	list-style: none;
+	margin: 10px 0;
+	padding: 0;
+	color: var(--crt-dim);
+}
+
+.legend .glyph {
+	display: inline-block;
+	min-width: 14px;
+	text-align: center;
+	margin-right: 4px;
+	font-family: ui-monospace, monospace;
+}
+
+.amber-pure { color: #ffd28a; }
+.amber { color: #f4b860; }
+.amber-dim { color: #8a6420; }
+
+#touch-controls {
+	display: none;
+	margin: 12px 0;
+	gap: 6px;
+}
+
+@media (hover: none) and (pointer: coarse) {
+	#touch-controls { display: grid; grid-template-columns: repeat(3, 64px); justify-content: center; }
+	#touch-controls .dpad { display: none; }
+}
