@@ -1,5 +1,6 @@
-// ROGUE.EXE — canvas bootstrap: Retina-aware sizing + phosphor-amber palette.
-
+// ROGUE.EXE — canvas bootstrap: Retina-aware sizing + dungeon palette.
+// Warm amber CRTs as the base, each entity gets its own hue so the map reads
+// at a glance: cyan stairs, green goblins, bone-white skeletons, gold & potions.
 
 export interface Rgb {
 	r: number
@@ -8,10 +9,26 @@ export interface Rgb {
 	a: number
 }
 
-// Amber CRT phosphor — the ROGUE identity (MAZE=green, INVADERS=green, ROGUE=amber).
-export const AMBER: Rgb = { r: 255, g: 176, b: 46, a: 42 }
-export const AMBER_DIM: Rgb = { r: 255, g: 176, b: 46, a: 18 }
-export const AMBER_PURE: Rgb = { r: 255, g: 176, b: 45, a: 255 }
+// Background ink — near-black, slightly warm.
+export const BG: Rgb = { r: 5, g: 3, b: 0, a: 255 }
+
+// Terrain.
+export const FLOOR: Rgb = { r: 189, g: 133, b: 62, a: 255 } // dim amber '.'
+export const WALL: Rgb = { r: 108, g: 120, b: 104, a: 255 } // desaturated slate green '#'
+export const STAIRS: Rgb = { r: 99, g: 201, b: 217, a: 255 } // cyan portal '>'
+
+// Actors.
+export const PLAYER: Rgb = { r: 255, g: 216, b: 146, a: 255 } // bright hero '@'
+export const GOBLIN: Rgb = { r: 123, g: 201, b: 107, a: 255 } // goblin green 'g'
+export const SKELETON: Rgb = { r: 230, g: 223, b: 200, a: 255 } // bone white 'K'
+
+// Items.
+export const GOLD: Rgb = { r: 255, g: 214, b: 96, a: 255 } // ' $'
+export const POTION: Rgb = { r: 255, g: 122, b: 110, a: 255 } // hearthpotion red '!'
+
+// Text.
+export const TEXT: Rgb = { r: 255, g: 209, b: 117, a: 255 } // status/amber text
+export const TEXT_DIM: Rgb = { r: 139, g: 96, b: 46, a: 255 } // log history
 
 export class Canvas {
 	readonly el: HTMLCanvasElement
@@ -32,7 +49,7 @@ export class Canvas {
 	clear(): void {
 		const ctx = this.ctx
 		ctx.setTransform(this.scale, 0, 0, this.scale, 0, 0)
-		ctx.fillStyle = '#140c02'
+		ctx.fillStyle = rgbToFill(BG)
 		ctx.fillRect(0, 0, this.width, this.height)
 	}
 

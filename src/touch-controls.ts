@@ -14,7 +14,7 @@ const MOVE_KEYS: Record<string, string> = {
 	c: 'c',
 }
 
-const ACTION_KEYS: string[] = [' ', '>', '<', 'Enter', 'Escape', 'm']
+const ACTION_KEYS: string[] = [' ', '>', '<', 'Enter', 'Escape', 'm', 'r', 'p', 'b', 'i']
 
 export class TouchControls {
 	private readonly root: HTMLElement
@@ -75,7 +75,10 @@ export class TouchControls {
 		const actionDefs: Array<[string, string, string]> = [
 			[' ', 'FIRE/WAIT', 'bump attack'],
 			['>', 'STAIRS', 'descend'],
-			['!', 'POTION', 'drink'],
+			['p', 'DRINK', 'quaff a carried potion'],
+			['i', 'PACK', 'choose a carried potion'],
+			['b', 'TRADE', 'buy from a nearby merchant'],
+			['r', 'REVIVE', 'reincarnate after death'],
 			['Enter', 'RUN', 'press to start'],
 			['Escape', 'MENU', 'pause help'],
 			['m', 'MUTE', 'sound on/off'],
@@ -118,7 +121,6 @@ export class TouchControls {
 	}
 
 	private timeoutId = 0
-
 
 	private release(key: string): void {
 		if (key && (MOVE_KEYS[key] || ACTION_KEYS.includes(key))) {

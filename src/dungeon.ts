@@ -12,9 +12,10 @@ import {
 	ROOM_MIN_H,
 	ROOM_MIN_W,
 	ROOM_SPACING,
+	SHOP_FLOORS,
 } from './constants.ts'
 
-export type Terrain = 'wall' | 'floor' | 'stairs'
+export type Terrain = 'wall' | 'floor' | 'stairs' | 'shop'
 
 export interface Dungeon {
 	width: number
@@ -23,6 +24,7 @@ export interface Dungeon {
 	rooms: Room[]
 	start: { x: number; y: number }
 	stairs: { x: number; y: number }
+	shop?: { x: number; y: number }
 }
 
 export interface Room {
@@ -36,6 +38,7 @@ const CHAR_TILE: Record<Terrain, string> = {
 	wall: '#',
 	floor: '.',
 	stairs: '>',
+	shop: 'M',
 }
 
 export function dungeonGlyphs(d: Dungeon): string[][] {
@@ -44,7 +47,8 @@ export function dungeonGlyphs(d: Dungeon): string[][] {
 
 export function isWalkable(d: Dungeon, x: number, y: number): boolean {
 	if (x < 0 || y < 0 || x >= d.width || y >= d.height) return false
-	return d.terrain[y][x] !== 'wall'
+	const t = d.terrain[y]?.[x]
+	return t === 'floor' || t === 'stairs'
 }
 
 export function randomFloor(rnd: Rng, d: Dungeon): { x: number; y: number } {
@@ -108,10 +112,26 @@ export function generateDungeon(rnd: Rng, depth = 1): Dungeon {
 
 	const stairs = { x: farthest.x, y: farthest.y }
 
+	let shop: Dungeon['shop']
+	if (SHOP_FLOORS.has(depth)) {
+		const candidates = rooms.filter((r) => {
+			const cx = r.x + Math.floor(r.w / 2)
+			const cy = r.y + Math.floor(r.h / 2)
+			return !(cx === start.x && cy === start.y) && !(cx === stairs.x && cy === stairs.y)
+		})
+		const room = candidates[Math.floor(rnd() * candidates.length)]
+		if (room) {
+			const cx = room.x + Math.floor(room.w / 2)
+			const cy = room.y + Math.floor(room.h / 2)
+			terrain[cy][cx] = 'shop'
+			shop = { x: cx, y: cy }
+		}
+	}
+
 	const rngTraffic = (CORRIDOR_T * depth) / 100
 	void rngTraffic
 
-	return { width, height, terrain, rooms, start, stairs }
+	return { width, height, terrain, rooms, start, stairs, shop }
 }
 
 function carveCorridor(

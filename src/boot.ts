@@ -1,17 +1,9 @@
 // ROGUE.EXE boot overlay — amber CRT splash. Contract: `new Boot()` + `boot.start(cb)`.
 import { dailySeed, seedLabel } from "./rng.ts"
+import { BOOT_LINES } from "./lore.ts"
+import { PadPoll } from "./gamepad.ts"
 
-const LINES = [
-	"ROGUE.EXE",
-	"",
-	"You claw through crumbling stone toward a claim of gold.",
-	"Six depths. Permadeath. Today dungeon is seeded for everyone.",
-	"",
-	"WASD / QEZC to move, bump to fight, walk over items to claim them,",
-	"hit the > stairs to descend. Space waits a turn.",
-	"",
-	"PRESS ENTER / TAP TO START",
-]
+const SEED_LINE = "Today dungeon is seeded for everyone; the seed changes at midnight."
 
 export class Boot {
 	private readonly overlay: HTMLElement
@@ -29,12 +21,12 @@ export class Boot {
 	start(cb: () => void): void {
 		this.done = false
 		const seed = dailySeed()
-		const glyphs = LINES
+		const glyphs = BOOT_LINES
 		this.text.innerHTML =
 			glyphs
 				.map((l) => (l === "" ? "<br>" : `<div>${h(l)}</div>`))
 				.join("") +
-			`<div class="seed">SEED ${h(seedLabel(seed))}</div>`
+			`<div class="seed">${h(SEED_LINE)} — SEED ${h(seedLabel(seed))}</div>`
 		this.overlay.classList.remove("hidden")
 		this.overlay.classList.add("shown")
 		const go = (): void => {
@@ -43,6 +35,7 @@ export class Boot {
 			this.overlay.classList.add("hidden")
 			this.overlay.classList.remove("shown")
 			window.removeEventListener("keydown", onKey)
+			cancelAnimationFrame(raf)
 			cb()
 		}
 		const onKey = (e: KeyboardEvent): void => {
@@ -50,6 +43,19 @@ export class Boot {
 		}
 		window.addEventListener("keydown", onKey)
 		this.overlay.addEventListener("click", go, { once: true })
+		const padPoll = new PadPoll((t) => {
+			if (t === "enter") go()
+		})
+		let raf = 0
+		const loop = (): void => {
+			if (this.done) {
+				cancelAnimationFrame(raf)
+				return
+			}
+			padPoll.poll(performance.now() / 1000)
+			raf = requestAnimationFrame(loop)
+		}
+		raf = requestAnimationFrame(loop)
 	}
 }
 
