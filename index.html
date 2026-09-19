@@ -11,7 +11,7 @@
 		<title>ROGUE.EXE — amber CRT dungeon crawler</title>
 		<meta
 			name="description"
-			content="ROGUE.EXE: a retro amber-terminal roguelike. Bump combat against goblins and skeletons, hoard gold, quaff potions, find the stairs '>' and descend — permadeath, deterministic daily dungeon."
+			content="ROGUE.EXE: a retro amber-terminal roguelike. Fight goblins, skeletons and the guardians of the deep, hoard gold, trade with merchants and identify potions, then take the stairs '>' down 15 floors — permadeath, deterministic daily dungeon."
 		/>
 	</head>
 	<body>
@@ -22,33 +22,49 @@
 				<div id="hud-bar">
 					<span id="hud-depth">D1</span>
 					<span id="hud-hp">HP --/--</span>
+					<span id="hud-atk">ATK 6</span>
 					<span id="hud-lvl">LVL 1</span>
 					<span id="hud-xp">XP 0</span>
 					<span id="hud-gold">GOLD 0</span>
+					<span id="hud-potions">· (0)</span>
 				</div>
 			</header>
 
-			<canvas id="game" width="1024" height="704"></canvas>
+			<div class="stage">
+				<canvas id="game" width="1152" height="720"></canvas>
+
+				<div id="inventory" class="crt-panel hidden" role="dialog" aria-label="Inventory">
+					<h2 class="panel-title">PACK &amp; PHIALS</h2>
+					<ol id="inv-list" class="inv-list"></ol>
+					<p class="panel-hint">Arrows / D-pad choose &middot; A / Enter quaffs &middot; B / Esc closes</p>
+				</div>
+
+				<div id="shop" class="crt-panel hidden" role="dialog" aria-label="Trader's shelf">
+					<h2 class="panel-title">THE TRADER&rsquo;S SHELF</h2>
+					<ol id="shop-list" class="inv-list"></ol>
+					<p id="shop-hint" class="panel-hint">Up / Down choose &middot; A / Enter buys &middot; B / Esc leaves</p>
+				</div>
+
+				<div id="boot" class="boot hidden">
+					<div id="boot-text" class="boot-text"></div>
+				</div>
+			</div>
 
 			<ul class="legend" aria-label="Legend">
-				<li><b class="glyph amber-pure">@</b> you</li>
-				<li><b class="glyph amber">#</b> wall</li>
-				<li><b class="glyph amber-dim">.</b> floor</li>
-				<li><b class="glyph amber-pure">></b> stairs &mdash; stand on them to descend</li>
-				<li><b class="glyph amber">$</b> gold</li>
-				<li><b class="glyph amber">!</b> potion</li>
-				<li><b class="glyph amber-pure">g</b> goblin</li>
-				<li><b class="glyph amber-pure">K</b> skeleton</li>
+				<li><span class="legend-icon" data-sprite="player"></span> you (8-bit hero)</li>
+				<li><span class="legend-icon" data-sprite="wall"></span> wall</li>
+				<li><span class="legend-icon" data-sprite="floor"></span> floor</li>
+				<li><span class="legend-icon" data-sprite="stairs"></span> stairs &mdash; stand on them to descend</li>
+				<li><span class="legend-icon" data-sprite="gold"></span> gold</li>
+				<li><span class="legend-icon" data-sprite="potion"></span> potion &mdash; unknown until drunk</li>
+				<li><span class="legend-icon" data-sprite="pack"></span> pack &mdash; arrows / D-pad choose, A quaffs</li>
+				<li><span class="legend-icon" data-sprite="merchant"></span> merchant &mdash; B to trade</li>
+				<li><span class="legend-icon" data-sprite="goblin"></span> goblin</li>
+				<li><span class="legend-icon" data-sprite="skeleton"></span> skeleton</li>
+				<li><span class="legend-icon" data-sprite="boss"></span> troll &middot; king &middot; dragon &mdash; floors 5, 10, 15</li>
 			</ul>
 
-			<div id="log" aria-live="polite" aria-label="Game log"></div>
-
-			<div id="touch-controls" aria-label="Touch controls">
-				<button class="dpad k-up" data-key="w" aria-label="Up">▲</button>
-				<button class="dpad k-left" data-key="a" aria-label="Left">◀</button>
-				<button class="dpad k-down" data-key="s" aria-label="Down">▼</button>
-				<button class="dpad k-right" data-key="d" aria-label="Right">▶</button>
-			</div>
+			<div id="touch-controls" aria-label="Touch controls"></div>
 		</main>
 		<script type="module" src="/src/main.ts"></script>
 	</body>
